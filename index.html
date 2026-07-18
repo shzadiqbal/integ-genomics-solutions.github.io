@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integ Genomics Solutions | Advanced NGS & Bioinformatics Services</title>
+    <meta name="description" content="Expert NGS data analysis, structural bioinformatics, and systems biology consulting for biotech, pharma, and academic research. RNA-seq, WES/WGS, GWAS, WGCNA, and molecular dynamics.">
+    <meta name="keywords" content="NGS analysis, RNA-seq, bioinformatics, WES, WGS, GWAS, structural bioinformatics, molecular dynamics, biostatistics, genomics consulting">
+    <meta name="author" content="Integ Genomics Solutions">
+    <meta property="og:title" content="Integ Genomics Solutions | Advanced NGS & Bioinformatics Services">
+    <meta property="og:description" content="Expert NGS data analysis and bioinformatics consulting for biotech and pharma.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://integ-genomics-solutions.github.io">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2035;
+            --bg-card-hover: #1e2540;
+            --text-primary: #f0f4f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-teal: #2dd4bf;
+            --accent-gold: #f59e0b;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --border-subtle: rgba(148, 163, 184, 0.1);
+            --border-glow: rgba(45, 212, 191, 0.3);
+            --gradient-hero: linear-gradient(135deg, #0a0e1a 0%, #111827 50%, #0f172a 100%);
+            --gradient-accent: linear-gradient(135deg, #2dd4bf 0%, #3b82f6 100%);
+            --shadow-glow: 0 0 40px rgba(45, 212, 191, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-teal);
+        }
+
+        /* DNA Canvas Background */
+        #dna-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 14, 26, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 14, 26, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-teal);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 2rem 80px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid var(--border-glow);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--accent-teal);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--gradient-accent);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(45, 212, 191, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-teal);
+            background: rgba(45, 212, 191, 0.05);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem;
+            margin-top: 4rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.8s both;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-teal);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.25rem;
+        }
+
+        /* Section Styles */
+        section {
+            position: relative;
+            z-index: 2;
+            padding: 100px 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--accent-teal);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            background: var(--bg-card-hover);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(45, 212, 191, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            background: rgba(45, 212, 191, 0.2);
+            transform: scale(1.1);
+        }
+
+        .service-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .service-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(45, 212, 191, 0.08);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--accent-teal);
+            font-weight: 500;
+        }
+
+        /* Process Section */
+        .process-section {
+            background: var(--bg-secondary);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .process-step {
+            position: relative;
+            padding: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-3px);
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+        }
+
+        .process-step h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .process-step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .process-connector {
+            display: none;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            gap: 1.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateX(5px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .team-card:hover::before {
+            opacity: 1;
+        }
+
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-accent);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(45, 212, 191, 0.3);
+        }
+
+        .team-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-info .title {
+            color: var(--accent-teal);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .team-info .affiliation {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .team-info .bio {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .expertise-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .expertise-tag {
+            padding: 0.25rem 0.75rem;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--accent-purple);
+            font-weight: 500;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: var(--bg-secondary);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .contact-info h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info > p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-method:hover {
+            border-color: var(--border-glow);
+            transform: translateX(5px);
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(45, 212, 191, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .contact-method div strong {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-method div span,
+        .contact-method div a {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-method div a:hover {
+            color: var(--accent-teal);
+        }
+
+        .contact-clients {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+        }
+
+        .contact-clients h4 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .contact-clients p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 2;
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-teal);
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.7);
+            }
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 0 8px rgba(45, 212, 191, 0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: var(--bg-secondary);
+                flex-direction: column;
+                padding: 1rem 2rem;
+                border-bottom: 1px solid var(--border-subtle);
+                gap: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 1rem 0;
+                border-bottom: 1px solid var(--border-subtle);
+            }
+
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero {
+                padding: 100px 1.5rem 60px;
+            }
+
+            section {
+                padding: 60px 1.5rem;
+            }
+
+            .services-grid,
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .team-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .team-avatar {
+                margin: 0 auto;
+            }
+
+            .expertise-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+
+    <!-- DNA Background Animation -->
+    <canvas id="dna-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">Integ<span> Genomics</span></div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Toggle menu">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#services" class="active">Services</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Now Accepting Projects for 2026</div>
+            <h1>
+                Advanced NGS Analysis &<br>
+                <span class="gradient-text">Bioinformatics Solutions</span>
+            </h1>
+            <p class="hero-subtitle">
+                Precision genomics consulting for biotech, pharma, and academic research. 
+                From raw sequencing data to publication-ready insights — we deliver rigorous, 
+                reproducible, and scalable bioinformatics workflows.
+            </p>
+            <div class="hero-cta">
+                <a href="#contact" class="btn btn-primary">
+                    Start Your Project →
+                </a>
+                <a href="#services" class="btn btn-secondary">
+                    Explore Services
+                </a>
+            </div>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number">7+</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Projects Delivered</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Reproducible Workflows</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">Our Expertise</span>
+                <h2>End-to-End NGS & Bioinformatics Services</h2>
+                <p>Comprehensive analytical support tailored to your research questions, from experimental design to final manuscript figures.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card reveal">
+                    <div class="service-icon">⚡</div>
+                    <h3>RNA-seq Analysis</h3>
+                    <p>Differential expression, transcript quantification, pathway enrichment, and quality control for transcriptomic studies of any scale.</p>
+                    <div class="service-tags">
+                        <span class="tag">DESeq2</span>
+                        <span class="tag">edgeR</span>
+                        <span class="tag">GSEA</span>
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🧬</div>
+                    <h3>WES / WGS Analysis</h3>
+                    <p>Variant calling, annotation, and clinical interpretation for whole exome and whole genome sequencing projects.</p>
+                    <div class="service-tags">
+                        <span class="tag">GATK</span>
+                        <span class="tag">ANNOVAR</span>
+                        <span class="tag">ClinVar</span>
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">📊</div>
+                    <h3>GWAS & eQTL</h3>
+                    <p>Genome-wide association studies, expression QTL analysis, colocalization, and fine-mapping for complex trait genetics.</p>
+                    <div class="service-tags">
+                        <span class="tag">PLINK</span>
+                        <span class="tag">coloc</span>
+                        <span class="tag">SuSiE</span>
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🔗</div>
+                    <h3>WGCNA & Network Biology</h3>
+                    <p>Weighted gene co-expression network analysis, module-trait associations, and hub gene prioritization.</p>
+                    <div class="service-tags">
+                        <span class="tag">WGCNA</span>
+                        <span class="tag">Cytoscape</span>
+                        <span class="tag">PPI Networks</span>
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">🧪</div>
+                    <h3>Structural Bioinformatics</h3>
+                    <p>Protein docking, molecular dynamics simulations, binding affinity predictions, and structure validation.</p>
+                    <div class="service-tags">
+                        <span class="tag">AutoDock</span>
+                        <span class="tag">GROMACS</span>
+                        <span class="tag">AlphaFold</span>
+                    </div>
+                </div>
+                <div class="service-card reveal">
+                    <div class="service-icon">📈</div>
+                    <h3>Biostatistics & Consulting</h3>
+                    <p>Statistical design, rigorous methodology, reproducible workflows, and publication-ready analysis with full documentation.</p>
+                    <div class="service-tags">
+                        <span class="tag">R</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Snakemake</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="process-section">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">How We Work</span>
+                <h2>Our 4-Step Engagement Process</h2>
+                <p>Transparent, collaborative, and built for scientific rigor from day one.</p>
+            </div>
+            <div class="process-grid">
+                <div class="process-step reveal">
+                    <div class="step-number">1</div>
+                    <h3>Discovery</h3>
+                    <p>We begin with an in-depth consultation to understand your project scope, data types, biological questions, timeline, and goals.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-number">2</div>
+                    <h3>Proposal</h3>
+                    <p>You receive a detailed scope of work, clear deliverables, realistic timeline, and transparent cost estimate tailored to your needs.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-number">3</div>
+                    <h3>Execution</h3>
+                    <p>We run analyses using containerized, version-controlled pipelines with regular progress updates and intermediate checkpoints.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-number">4</div>
+                    <h3>Delivery</h3>
+                    <p>Complete scripts, raw and processed data, publication-quality figures, and comprehensive documentation for full reproducibility.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-label">Our Team</span>
+                <h2>World-Class Scientific Expertise</h2>
+                <p>PhD-level specialists with deep domain knowledge in genomics, structural biology, and computational statistics.</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card reveal">
+                    <div class="team-avatar">MS</div>
+                    <div class="team-info">
+                        <h3>Muhammad Shahzad Iqbal, PhD</h3>
+                        <div class="title">Lead Genomics Specialist</div>
+                        <div class="affiliation">🏛️ University of Okara, Pakistan</div>
+                        <p class="bio">PhD Molecular Biology with postdoctoral training in genomics. Specializes in NGS data analysis and statistical genetics with 7+ years of hands-on experience across diverse model systems.</p>
+                        <div class="expertise-tags">
+                            <span class="expertise-tag">RNA-seq</span>
+                            <span class="expertise-tag">WES/WGS</span>
+                            <span class="expertise-tag">GWAS/eQTL</span>
+                            <span class="expertise-tag">WGCNA</span>
+                            <span class="expertise-tag">Biostatistics</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card reveal">
+                    <div class="team-avatar">MH</div>
+                    <div class="team-info">
+                        <h3>Dr. Mubashir Hassan</h3>
+                        <div class="title">Structural Bioinformatics Specialist</div>
+                        <div class="affiliation">🏥 Nationwide Children's Hospital, Columbus, USA</div>
+                        <p class="bio">Expert in structural biology and computational modeling. Specializes in protein-protein interactions, drug discovery applications, and molecular dynamics simulations.</p>
+                        <div class="expertise-tags">
+                            <span class="expertise-tag">Protein Modeling</span>
+                            <span class="expertise-tag">Molecular Dynamics</span>
+                            <span class="expertise-tag">Docking</span>
+                            <span class="expertise-tag">Binding Affinity</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info reveal">
+                    <span class="section-label">Get In Touch</span>
+                    <h3>Let's Discuss Your Project</h3>
+                    <p>Whether you need RNA-seq analysis, structural biology modeling, or comprehensive genomics support — we're here to help. No project is too small or too large.</p>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">✉️</div>
+                            <div>
+                                <strong>Email</strong>
+                                <a href="mailto:shzad@live.com">shzad@live.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <div class="contact-icon">📱</div>
+                            <div>
+                                <strong>Phone / WhatsApp</strong>
+                                <a href="tel:+923347041004">+92-334-7041004</a>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <div class="contact-icon">💬</div>
+                            <div>
+                                <strong>Skype</strong>
+                                <span>shzad7</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="contact-clients">
+                        <h4>Who We Serve</h4>
+                        <p>Biotech startups, pharmaceutical companies, academic research groups, and core facilities globally. We adapt our workflows to your infrastructure and compliance requirements.</p>
+                    </div>
+                </div>
+
+                <div class="contact-form reveal">
+                    <form onsubmit="handleSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" placeholder="you@organization.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="organization">Organization</label>
+                            <input type="text" id="organization" name="organization" placeholder="University / Company">
+                        </div>
+                        <div class="form-group">
+                            <label for="service">Service Interest</label>
+                            <select id="service" name="service">
+                                <option value="">Select a service...</option>
+                                <option value="rnaseq">RNA-seq Analysis</option>
+                                <option value="weswgs">WES / WGS Analysis</option>
+                                <option value="gwas">GWAS & eQTL</option>
+                                <option value="wgcna">WGCNA & Network Biology</option>
+                                <option value="structural">Structural Bioinformatics</option>
+                                <option value="biostat">Biostatistics & Consulting</option>
+                                <option value="other">Other / Multiple Services</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Project Details</label>
+                            <textarea id="message" name="message" placeholder="Tell us about your project, data type, timeline, and goals..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                            Send Inquiry →
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#services">Services</a>
+            <a href="#process">Process</a>
+            <a href="#team">Team</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <p>© 2026 Integ Genomics Solutions. All rights reserved. Built for scientific rigor.</p>
+    </footer>
+
+    <script>
+        // DNA Helix Canvas Animation
+        const canvas = document.getElementById('dna-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let time = 0;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function drawDNA() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const strands = 3;
+            const amplitude = 80;
+            const frequency = 0.003;
+            const speed = 0.001;
+            const spacing = 120;
+            
+            for (let s = 0; s < strands; s++) {
+                const offsetX = (width / 2) + (s - 1) * 300;
+                const offsetTime = time + s * 2;
+                
+                for (let y = 0; y < height; y += 8) {
+                    const x1 = offsetX + Math.sin(y * frequency + offsetTime) * amplitude;
+                    const x2 = offsetX + Math.sin(y * frequency + offsetTime + Math.PI) * amplitude;
+                    
+                    const opacity = 0.15 + 0.1 * Math.sin(y * 0.01 + offsetTime);
+                    
+                    // Connection line
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y);
+                    ctx.lineTo(x2, y);
+                    ctx.strokeStyle = `rgba(45, 212, 191, ${opacity * 0.3})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    // Strand 1 dot
+                    ctx.beginPath();
+                    ctx.arc(x1, y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(45, 212, 191, ${opacity})`;
+                    ctx.fill();
+                    
+                    // Strand 2 dot
+                    ctx.beginPath();
+                    ctx.arc(x2, y, 2, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(139, 92, 246, ${opacity})`;
+                    ctx.fill();
+                }
+            }
+            
+            time += speed;
+            requestAnimationFrame(drawDNA);
+        }
+        drawDNA();
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('active');
+        }
+
+        // Active nav link on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Scroll reveal animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Form submission handler
+        function handleSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = 'Sending...';
+            btn.disabled = true;
+            
+            // Simulate form submission
+            setTimeout(() => {
+                btn.innerHTML = '✓ Inquiry Sent!';
+                btn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.background = '';
+                    e.target.reset();
+                }, 3000);
+            }, 1500);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    // Close mobile menu if open
+                    document.getElementById('navLinks').classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
